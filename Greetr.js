@@ -1,21 +1,27 @@
+// called using IIFEs
 (function(global,$){
+    
+    // new object creation
   var Greeter = function(firstName, lastName , language) {
       return new Greeter.init(firstName, lastName, language);
   }
   
+  // hidden within the scope of the IIFE
+  var supportedLangs = ['en','es'];
+    
+    // logger messages
   var logMessages = {
       en: 'Logged in',
-      es 'Inicion sesion'
+      es: 'Inicion sesion'
   };
   
-  var supportedLangs = ['en','es']
-  
-  greetings = {
+
+  var greetings = {
     en: 'Hello',
     es: 'Hola'
   };
     
-  formalGreetings = {
+  var formalGreetings = {
     en: 'Greetings' ,
     es: 'Saludos'
   };
@@ -33,6 +39,9 @@
       },
       
       validate: function() {
+          // check if this is a valid languagge
+          // referece to the array of supportedLangs
+          
           if (supportedLangs.indexOf(this.language) === -1){
               throw "Invalid language";
           }
@@ -65,13 +74,40 @@
       
       log: function(){
       if(console){
-          console.log(logMessages[this.languages] + ': ' + this.fullName();
-          )
+          console.log(logMessages[this.languages] + ': ' + this.fullName());
+          
         }
+          //make chainable
+          return this;
+      },
+      
+      //
+      HTMLGreeting: function(selector, formal){
+          if(!$){
+              throw 'jQuery not loaded';
+          }
+          
+          if(!selector){
+              throw 'Missing jQuery selector';
+          }
+          
+          var msg;
+          if(formal){
+              msg = this.greetingFormal();
+          }
+          
+          else{
+              msg = this.greeting;
+          }
+          
+          $(selector).html(msg);
+          //make chainable
           return this;
       }
   }
   
+    
+    // the actual object is created here, allowing us to use construct the object without using the new keyword
   Greeter.init = function(firstName, lastName, language){
       var self = this;
       self.firstName = firstName || '';
@@ -81,6 +117,7 @@
   
   Greeter.init.prototype = Greeter.prototype;
     
-    global.Greeter = global.G$ = Greeter;
+    // attached out Greeter to the global object, and provide it an alias $G for easier typing
+ global.Greeter = global.G$ = Greeter;
   
 }(window,jQuery));
